@@ -16,6 +16,7 @@ repositories {
 }
 
 dependencies {
+	// main
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -23,10 +24,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	// optional
-
-	// plagiator
 	implementation("de.jplag:jplag:3.0.0")
-
+	implementation("org.apache.commons:commons-lang3:3.12.0")
+	implementation("net.lingala.zip4j:zip4j:2.10.0")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
