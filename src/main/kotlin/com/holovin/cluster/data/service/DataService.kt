@@ -7,5 +7,5 @@ interface DataService {
 
     fun saveLab(file: File): String
 
-    fun saveWithToken(file : ZipFile)
+    fun saveLab(file : ZipFile): String
 }

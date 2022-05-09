@@ -6,6 +6,7 @@ import com.holovin.cluster.user.service.UserService
 import com.holovin.cluster.user.service.domain.UserData
 import com.holovin.cluster.user.service.domain.UserRole
 import net.lingala.zip4j.ZipFile
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -13,12 +14,6 @@ import java.io.File
 
 @SpringBootTest
 internal class E2E{
-
-    @Autowired
-    lateinit var dataService: DataService
-
-    @Autowired
-    lateinit var plagiaristService: PlagiaristService
 
     @Autowired
     lateinit var userService: UserService
@@ -32,9 +27,8 @@ internal class E2E{
         val zipToSave = ZipFile("filename.zip")
         zipToSave.addFolder(File(nameProjectToSave))
 
-//        userService.addLab(userData, zipToSave)
+        val result = userService.addLab(userData, zipToSave)
 
-
-
+        Assertions.assertEquals("success projectName", result)
     }
 }

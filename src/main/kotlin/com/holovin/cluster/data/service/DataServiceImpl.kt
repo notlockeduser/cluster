@@ -12,8 +12,9 @@ class DataServiceImpl : DataService {
         TODO("Not yet implemented")
     }
 
-    override fun saveWithToken(file: ZipFile) {
+    override fun saveLab(file: ZipFile): String {
         file.extractAll("C:\\Users\\Bogdan\\Desktop\\project-diplom\\cluster\\files")
+        return "project_test"
     }
 
 }

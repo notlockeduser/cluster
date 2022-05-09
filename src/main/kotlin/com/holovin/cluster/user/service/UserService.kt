@@ -5,5 +5,5 @@ import net.lingala.zip4j.ZipFile
 
 interface UserService {
 
-    fun addLab(userData: UserData, lab: ZipFile)
+    fun addLab(userData: UserData, lab: ZipFile): String
 }

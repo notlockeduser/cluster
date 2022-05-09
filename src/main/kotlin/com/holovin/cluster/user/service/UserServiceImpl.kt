@@ -13,13 +13,12 @@ class UserServiceImpl(
     val dataService: DataService
 ) : UserService {
 
-    override fun addLab(userData: UserData, lab: ZipFile) {
-        if (userData.role == UserRole.STUDENT){
-//            val nameLab = dataService.saveLab(lab)
-//            val resultOfCheck = plagiaristService.checkLab(nameLab)
-//            println(resultOfCheck)
-        } else {
-            throw IllegalArgumentException("this command for STUDENT, userData = $userData")
-        }
+    override fun addLab(userData: UserData, lab: ZipFile): String {
+        require(userData.role == UserRole.STUDENT) { "this command for STUDENT, userData = $userData" }
+
+        val nameLab = dataService.saveLab(lab)
+        val resultOfCheck = plagiaristService.checkLab(nameLab)
+        println(resultOfCheck)
+        return resultOfCheck.result
     }
 }

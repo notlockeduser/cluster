@@ -17,7 +17,7 @@ class PlagiaristServiceImpl : PlagiaristService {
         TODO("Not yet implemented")
     }
 
-    override fun checkLab(labName: String): ResultOfCheck {
+    override fun checkLab(projectName: String): ResultOfCheck {
         val options = JPlagOptions(
             "C:\\Users\\Bogdan\\Desktop\\project-diplom\\cluster\\files", LanguageOption.JAVA
         )
@@ -33,7 +33,7 @@ class PlagiaristServiceImpl : PlagiaristService {
 
         report.writeResult(result)
 
-        return ResultOfCheck("success")
+        return ResultOfCheck("success projectName")
     }
 
     override fun checkFiles() {

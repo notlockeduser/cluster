@@ -1,7 +1,6 @@
 package com.holovin.cluster.data.service
 
 import net.lingala.zip4j.ZipFile
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -15,10 +14,11 @@ internal class DataServiceImplTest {
 
     @Test
     fun saveWithToken() {
+        // user create zip file and put into service
         val nameProjectToSave = "C:\\Users\\Bogdan\\Desktop\\project-diplom\\cluster\\internet_files\\project_test"
         val zipToSave = ZipFile("filename.zip")
         zipToSave.addFolder(File(nameProjectToSave))
 
-        dataService.saveWithToken(zipToSave)
+        dataService.saveLab(zipToSave)
     }
 }

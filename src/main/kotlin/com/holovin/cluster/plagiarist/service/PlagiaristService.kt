@@ -6,7 +6,7 @@ interface PlagiaristService {
 
     fun addFiles(files: List<File>)
 
-    fun checkLab(file: String): ResultOfCheck
+    fun checkLab(projectName: String): ResultOfCheck
 
     fun checkFiles()
 }
