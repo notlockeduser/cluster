@@ -15,6 +15,8 @@ interface PlagiaristServiceClient {
     fun addFiles(files: List<File>)
 
     fun checkFile(file: File): Result<String>
+
+    fun checkFiles()
 }
 
 class PlagiaristServiceClientImpl : PlagiaristServiceClient {
@@ -42,7 +44,7 @@ class PlagiaristServiceClientImpl : PlagiaristServiceClient {
         return Result.success("T")
     }
 
-    fun checkFile(): Result<String> {
+    override fun checkFiles() {
         val (options, result) = resultOfRunPlagiaristChecker()
         printResult(result)
 
@@ -50,7 +52,6 @@ class PlagiaristServiceClientImpl : PlagiaristServiceClient {
         val report = Report(outputDir, options)
         report.writeResult(result)
 
-        return Result.success("T")
     }
 
     private fun resultOfRunPlagiaristChecker(): Pair<JPlagOptions, JPlagResult> {
