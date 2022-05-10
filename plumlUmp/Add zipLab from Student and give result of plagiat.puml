@@ -15,6 +15,7 @@ activate student
 student -> gw: Add lab
 activate gw
 
+gw -> gw: Check file size
 gw -> gw: Check auth
 
 gw -> userSvc: Add lab
