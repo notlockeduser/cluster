@@ -8,6 +8,6 @@ class DataService {
 
     fun saveLab(archiveLab: ZipFile, labName: String) {
         archiveLab.renameFile(archiveLab.fileHeaders.last(), labName)
-        archiveLab.extractAll("C:\\Users\\Bogdan\\Desktop\\project-diplom\\cluster\\files")
+        archiveLab.extractAll("xFiles\\database_lab_files")
     }
 }
