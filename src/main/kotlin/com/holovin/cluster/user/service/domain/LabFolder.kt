@@ -1,20 +1,13 @@
 package com.holovin.cluster.user.service.domain
 
-class LabData(
+class LabFolder(
     private val idTeacher: String,
     private val labNumber: String,
-    private val group: String,
-    private val surname: String,
-    private val name: String
+    private val group: String
 ) {
     fun createNameFolder(): String {
         return idTeacher + "_" + labNumber + "_" + group
     }
 
-    fun createNameLab(): String {
-        return idTeacher + "_" + labNumber + "_" + group + "_" + surname + "_" + name
-    }
-
     companion object
 }
-
