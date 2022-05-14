@@ -22,6 +22,11 @@ class UserService(
         mongoDb.addUser(mongoUser)
     }
 
+    fun updateUser(mongoUser: UserData) {
+        // update
+        mongoDb.getUserById(mongoUser.id)
+    }
+
     // Student
     fun addLab(studentId: String, labData: LabData, archiveLab: ZipFile) {
 
@@ -56,7 +61,7 @@ class UserService(
     }
 
     // Teacher
-    fun updateStudentAccess(teacherId: String, emailStudent: String, labFolder: LabFolder) {
+    fun updateStudentAccessByEmail(teacherId: String, emailStudent: String, labFolder: LabFolder) {
 
         val userData = mongoDb.getUserById(teacherId)
         require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
@@ -66,6 +71,15 @@ class UserService(
 
         // add access (update field acceptedFolders)
         mongoDb.getUserByEmail(emailStudent).acceptedFolders.add(labFolder)
+    }
+
+    fun updateStudentsAccessByGroup(teacherId: String, labFolder: LabFolder) {
+
+        val userData = mongoDb.getUserById(teacherId)
+        require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
+
+        // add access (update field acceptedFolders)
+        mongoDb.getUsersByGroup(labFolder.group).map { it.acceptedFolders.add(labFolder) }
     }
 
     fun getResultOfLabFolder(teacherId: String, labFolder: LabFolder): String {

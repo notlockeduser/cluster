@@ -33,7 +33,7 @@ internal class ApplicationE2E {
         userService.addUser(teacherData)
 
         // add student access to folder
-        userService.updateStudentAccess(teacherData.id, studentData.email, labFolder)
+        userService.updateStudentAccessByEmail(teacherData.id, studentData.email, labFolder)
 
         // student add lab
         userService.addLab(studentData.id, labData, zipFile)

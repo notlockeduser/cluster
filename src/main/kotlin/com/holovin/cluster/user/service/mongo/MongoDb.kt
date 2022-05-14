@@ -22,5 +22,9 @@ class MongoDb {
     fun existsUserByEmail(email: String): Boolean {
         return userDataBase.any { it.email == email }
     }
+
+    fun getUsersByGroup(group: String): List<UserData> {
+        return userDataBase.filter { it.group == group }
+    }
 }
 
