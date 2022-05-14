@@ -35,6 +35,18 @@ class PlagiarismService {
         return searchResultByName(result, labName)
     }
 
+    fun checkFiles(labFolderName: String): String {
+        // add labFolderName in path!!!
+        val (options, result) = resultOfRunPlagiaristChecker()
+        printResult(result)
+
+        val outputDir = File(webOutput)
+        val report = Report(outputDir, options)
+        report.writeResult(result)
+
+        return result.comparisons.toString()
+    }
+
     private fun searchResultByName(result: JPlagResult, labName: String): List<String> {
         val comparisons = result.comparisons
         val result = mutableListOf<String>()
@@ -50,15 +62,6 @@ class PlagiarismService {
             }
         }
         return result
-    }
-
-    fun checkFiles() {
-        val (options, result) = resultOfRunPlagiaristChecker()
-        printResult(result)
-
-        val outputDir = File(webOutput)
-        val report = Report(outputDir, options)
-        report.writeResult(result)
     }
 
     private fun resultOfRunPlagiaristChecker(): Pair<JPlagOptions, JPlagResult> {

@@ -26,7 +26,6 @@ class UserService(
     fun addLab(studentId: String, labData: LabData, archiveLab: ZipFile) {
 
         val userData = mongoDb.getUserById(studentId)
-
         require(userData.role == UserRole.STUDENT) { "this command for STUDENT, id = $studentId" }
 
         // Check if student has access to folder
@@ -43,7 +42,6 @@ class UserService(
     fun checkLab(studentId: String, labData: LabData): String {
 
         val userData = mongoDb.getUserById(studentId)
-
         require(userData.role == UserRole.STUDENT) { "this command for STUDENT, id = $studentId" }
 
         // plagiarism service
@@ -58,13 +56,36 @@ class UserService(
     }
 
     // Teacher
-    fun updateStudentAccess(teacherUserData: UserData, emailStudent: String, labFolder: LabFolder) {
-        require(teacherUserData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $teacherUserData" }
+    fun updateStudentAccess(teacherId: String, emailStudent: String, labFolder: LabFolder) {
+
+        val userData = mongoDb.getUserById(teacherId)
+        require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
 
         // check if student is exists
         require(mongoDb.existsUserByEmail(emailStudent)) { "Student with this email is not exists, emailStudent = $emailStudent" }
 
         // add access (update field acceptedFolders)
         mongoDb.getUserByEmail(emailStudent).acceptedFolders.add(labFolder)
+    }
+
+    fun getResultOfLabFolder(teacherId: String, labFolder: LabFolder): String {
+
+        val userData = mongoDb.getUserById(teacherId)
+        require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
+
+        // plagiarism service
+        val resultOfCheck = plagiarismService.checkFiles(labFolder.createNameFolder())
+        println(resultOfCheck)
+
+        return resultOfCheck
+    }
+
+    fun addLabsByTeacher(teacherId: String, labFolder: LabFolder, archiveLab: ZipFile) {
+
+        val userData = mongoDb.getUserById(teacherId)
+        require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
+
+        // data service
+        dataService.saveLabs(archiveLab, labFolder.createNameFolder())
     }
 }
