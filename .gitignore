@@ -41,3 +41,5 @@ out/
 /xFiles/database_lab_files/
 /xFiles/input_lab_files/
 /xFiles/input_zip_files/
+
+!.gitkeep
