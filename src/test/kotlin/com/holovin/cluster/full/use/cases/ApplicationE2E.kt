@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
 
 @SpringBootTest
-internal class E2E {
+internal class ApplicationE2E {
 
     @Autowired
     lateinit var userService: UserService
@@ -52,8 +52,8 @@ internal class E2E {
     }
 
     companion object {
-        const val zipTemplate = "C:\\Users\\Bogdan\\Desktop\\project-diplom\\cluster\\zip_files\\"
-        const val inputTestLab = "C:\\Users\\Bogdan\\Desktop\\project-diplom\\cluster\\internet_files\\project_test"
+        const val zipTemplate = "xFiles\\input_zip_files\\"
+        const val inputTestLab = "xFiles\\input_lab_files\\project_test"
     }
 }
 

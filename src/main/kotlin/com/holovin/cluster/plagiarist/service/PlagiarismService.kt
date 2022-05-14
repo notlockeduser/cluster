@@ -85,7 +85,7 @@ class PlagiarismService {
     }
 
     companion object {
-        const val filesDb = "C:\\Users\\Bogdan\\Desktop\\project-diplom\\cluster\\files"
-        const val webOutput = "C:\\Users\\Bogdan\\Desktop\\project-diplom\\cluster\\output"
+        const val filesDb = "xFiles\\database_lab_files"
+        const val webOutput = "xFiles\\web_output"
     }
 }
