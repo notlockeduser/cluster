@@ -28,6 +28,10 @@ dependencies {
 	implementation("org.apache.commons:commons-lang3:3.12.0")
 	implementation("net.lingala.zip4j:zip4j:2.10.0")
 
+	implementation("org.jeasy:easy-random:5.0.0")
+	implementation("org.jeasy:easy-random-core:5.0.0")
+
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

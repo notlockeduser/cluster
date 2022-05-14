@@ -1,9 +1,18 @@
 package com.holovin.cluster.user.service.domain
 
-import org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric
-
 class UserData(
-    val id: String = randomAlphanumeric(10),
-    val name: String =  randomAlphanumeric(10),
-    val role: UserRole
-)
+    val id: String,
+    val name: String,
+    val surname: String,
+    val group: String,
+    val password: String,
+    val role: UserRole,
+    val email: String,
+    val acceptedFolders: MutableSet<String> = mutableSetOf()
+) {
+    fun copy(newRole: UserRole): UserData {
+        return UserData(id, name, surname, group, password, newRole, email, acceptedFolders)
+    }
+
+    companion object
+}
