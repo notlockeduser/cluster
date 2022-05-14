@@ -64,4 +64,3 @@ class UserService(
         // add access
         mongoDb.userDataBase.first { it.email == emailStudent }.acceptedFolders.add(labFolder.createNameFolder())
     }
-}
