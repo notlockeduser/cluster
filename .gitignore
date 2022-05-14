@@ -38,8 +38,5 @@ out/
 .vscode/
 
 ### Cluster files ###
-/xFiles/database_lab_files/
-/xFiles/input_lab_files/
-/xFiles/input_zip_files/
+/xFiles
 
-!.gitkeep
