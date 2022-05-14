@@ -12,7 +12,15 @@ class MongoDb {
     }
 
     fun getUserById(id: String): UserData {
-       return userDataBase.first { it.id == id }
+        return userDataBase.first { it.id == id }
+    }
+
+    fun getUserByEmail(email: String): UserData {
+        return userDataBase.first { it.email == email }
+    }
+
+    fun existsUserByEmail(email: String): Boolean {
+        return userDataBase.any { it.email == email }
     }
 }
 

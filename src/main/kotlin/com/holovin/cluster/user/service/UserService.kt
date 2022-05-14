@@ -23,21 +23,21 @@ class UserService(
     }
 
     // Student
-    fun addLab(studentId: String, labData: LabData, archiveLab: ZipFile): String {
+    fun addLab(studentId: String, labData: LabData, archiveLab: ZipFile) {
 
         val userData = mongoDb.getUserById(studentId)
 
         require(userData.role == UserRole.STUDENT) { "this command for STUDENT, id = $studentId" }
-        require(userData.acceptedFolders.contains(labData.createNameFolder())) {
+
+        // Check if student has access to folder
+        val labFolder = labData.createLabFolder()
+        require(userData.acceptedFolders.any { it == labFolder }) {
             "you does not have access to folder, accepted folder = ${userData.acceptedFolders} " +
-                    "require folder = ${labData.createNameFolder()}"
+                    "require folder = $labFolder"
         }
 
         // data service
-        val labName = labData.createNameLab()
-        dataService.saveLab(archiveLab, labName)
-
-        return labName
+        dataService.saveLab(archiveLab, labData.createNameLab())
     }
 
     fun checkLab(studentId: String, labData: LabData): String {
@@ -53,15 +53,18 @@ class UserService(
         return resultOfCheck.toString()
     }
 
+    fun getListOfAccessFolders(studentId: String): List<LabFolder> {
+        return mongoDb.getUserById(studentId).acceptedFolders.toList()
+    }
 
     // Teacher
     fun updateStudentAccess(teacherUserData: UserData, emailStudent: String, labFolder: LabFolder) {
         require(teacherUserData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $teacherUserData" }
 
-        //check if student is exists
-        require(mongoDb.userDataBase.any { it.email == emailStudent }) { "Student with this email is not exists, emailStudent = $emailStudent" }
+        // check if student is exists
+        require(mongoDb.existsUserByEmail(emailStudent)) { "Student with this email is not exists, emailStudent = $emailStudent" }
 
-        // add access
-        mongoDb.userDataBase.first { it.email == emailStudent }.acceptedFolders.add(labFolder.createNameFolder())
+        // add access (update field acceptedFolders)
+        mongoDb.getUserByEmail(emailStudent).acceptedFolders.add(labFolder)
     }
 }

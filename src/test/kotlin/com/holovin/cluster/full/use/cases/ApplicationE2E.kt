@@ -42,7 +42,7 @@ internal class ApplicationE2E {
         val result = userService.checkLab(studentData.id, labData)
 
         println("---Result  ====  $result")
-        assertThat(result).isNotNull()
+        assertThat(result).isNotNull
     }
 
     private fun createZipFile(): ZipFile {

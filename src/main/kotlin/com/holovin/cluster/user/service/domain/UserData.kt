@@ -8,8 +8,9 @@ class UserData(
     val password: String,
     val role: UserRole,
     val email: String,
-    val acceptedFolders: MutableSet<String> = mutableSetOf()
+    val acceptedFolders: MutableSet<LabFolder> = mutableSetOf()
 ) {
+
     fun copy(newRole: UserRole): UserData {
         return UserData(id, name, surname, group, password, newRole, email, acceptedFolders)
     }

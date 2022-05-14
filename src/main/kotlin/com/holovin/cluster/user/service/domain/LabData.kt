@@ -1,14 +1,15 @@
 package com.holovin.cluster.user.service.domain
 
-class LabData(
+data class LabData(
     private val idTeacher: String,
     private val labNumber: String,
     private val group: String,
     private val surname: String,
     private val name: String
 ) {
-    fun createNameFolder(): String {
-        return idTeacher + "_" + labNumber + "_" + group
+
+    fun createLabFolder(): LabFolder {
+        return LabFolder(idTeacher, labNumber, group)
     }
 
     fun createNameLab(): String {
