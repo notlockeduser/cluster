@@ -6,17 +6,16 @@ import org.springframework.stereotype.Component
 @Component
 class DataService {
 
-    fun saveLab(archiveLab: ZipFile, labName: String) {
+    fun saveLab(archiveLab: ZipFile, labFolder: String, labName: String) {
         archiveLab.renameFile(archiveLab.fileHeaders.last(), labName)
-        archiveLab.extractAll(folder)
+        archiveLab.extractAll(rootFolder + "\\" + labFolder)
     }
 
     fun saveLabs(archiveLab: ZipFile, labFolder: String) {
-        archiveLab.fileHeaders.map { archiveLab.renameFile(it, labFolder + it.fileName) }
-        archiveLab.extractAll(folder)
+        archiveLab.extractAll(rootFolder + "\\" + labFolder)
     }
 
     companion object {
-        const val folder = "xFiles\\database_lab_files"
+        const val rootFolder = "xFiles\\database_lab_files"
     }
 }

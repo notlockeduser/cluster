@@ -41,7 +41,7 @@ class UserService(
         }
 
         // data service
-        dataService.saveLab(archiveLab, labData.createNameLab())
+        dataService.saveLab(archiveLab, labData.createNameLabFolder(), labData.createNameLab())
     }
 
     fun checkLab(studentId: String, labData: LabData): String {

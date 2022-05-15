@@ -8,12 +8,16 @@ data class LabData(
     private val name: String
 ) {
 
+    fun createNameLab(): String {
+        return idTeacher + "_" + labNumber + "_" + group + "_" + surname + "_" + name
+    }
+
     fun createLabFolder(): LabFolder {
         return LabFolder(idTeacher, labNumber, group)
     }
 
-    fun createNameLab(): String {
-        return idTeacher + "_" + labNumber + "_" + group + "_" + surname + "_" + name
+    fun createNameLabFolder(): String {
+        return LabFolder(idTeacher, labNumber, group).createNameFolder()
     }
 
     companion object
