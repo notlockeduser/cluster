@@ -1,13 +1,11 @@
-//package com.holovin.cluster.plagiarist.service
-//
-//import org.junit.jupiter.api.Test
-//
-//internal class PlagiarismServiceImplTest {
-//
+package com.holovin.cluster.plagiarism.service
+
+internal class PlagiarismServiceTest {
+
 //    @Test
 //    fun checkFile() {
 //        val plagiaristServiceImpl = PlagiarismServiceImpl()
 //        plagiaristServiceImpl.checkFiles()
 //    }
-//
-//}
+
+}

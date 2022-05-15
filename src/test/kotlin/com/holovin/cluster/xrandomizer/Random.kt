@@ -8,5 +8,3 @@ private val EASY_RANDOM = EasyRandom()
 
 internal fun StudentData.Companion.random() = EASY_RANDOM.nextObject(StudentData::class.java)
 internal fun TeacherData.Companion.random() = EASY_RANDOM.nextObject(TeacherData::class.java)
-
-

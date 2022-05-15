@@ -1,7 +1,7 @@
 package com.holovin.cluster.user.service
 
 import com.holovin.cluster.data.service.DataService
-import com.holovin.cluster.plagiarist.service.PlagiarismService
+import com.holovin.cluster.plagiarism.service.PlagiarismService
 import com.holovin.cluster.user.service.domain.LabData
 import com.holovin.cluster.user.service.domain.LabFolder
 import com.holovin.cluster.user.service.domain.StudentData

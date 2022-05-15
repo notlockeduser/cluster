@@ -1,15 +1,9 @@
-//package com.holovin.cluster.data.service
-//
-//import net.lingala.zip4j.ZipFile
-//import org.junit.jupiter.api.Test
-//import org.springframework.beans.factory.annotation.Autowired
-//import org.springframework.boot.test.context.SpringBootTest
-//import java.io.File
-//
-//internal class DataServiceImplTest {
-//
-//    val dataService = DataServiceImpl()
-//
+package com.holovin.cluster.data.service
+
+internal class DataServiceTest {
+
+    private val dataService = DataService()
+
 //    @Test
 //    fun saveWithToken() {
 //        // user create zip file and put into service
@@ -19,4 +13,4 @@
 //
 //        dataService.saveLab(zipToSave)
 //    }
-//}
+}

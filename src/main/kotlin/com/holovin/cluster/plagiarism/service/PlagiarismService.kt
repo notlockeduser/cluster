@@ -1,4 +1,4 @@
-package com.holovin.cluster.plagiarist.service
+package com.holovin.cluster.plagiarism.service
 
 import de.jplag.JPlag
 import de.jplag.JPlagResult

@@ -1,12 +1,12 @@
-package com.holovin.cluster.full.use.cases
+package com.holovin.cluster.a.system
 
+import com.holovin.cluster.full.use.cases.random
 import com.holovin.cluster.user.service.UserService
 import com.holovin.cluster.user.service.domain.LabData
 import com.holovin.cluster.user.service.domain.LabFolder
 import com.holovin.cluster.user.service.domain.StudentData
 import com.holovin.cluster.user.service.domain.TeacherData
 import com.holovin.cluster.user.service.mongo.StudentDataRepository
-import com.holovin.cluster.user.service.mongo.TeacherDataRepository
 import net.lingala.zip4j.ZipFile
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.assertj.core.api.Assertions.assertThat
@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
 
 @SpringBootTest
-internal class ApplicationE2E {
+internal class SystemE2E {
 
     @Autowired
     lateinit var userService: UserService
@@ -50,19 +50,6 @@ internal class ApplicationE2E {
         assertThat(result).isNotNull
     }
 
-    @Test
-    fun `check Mongo`() {
-        // GIVEN
-        val studentData = StudentData.random()
-
-        // WHEN
-        studentDataRepository.save(studentData)
-        val actual = studentDataRepository.findById(studentData.id).get()
-
-        // THEN
-        assertThat(actual).isEqualTo(studentData)
-    }
-
     private fun createZipFile(): ZipFile {
         val archiveZip = ZipFile(zipTemplate + "zip_${randomAlphabetic(10)}.zip")
         archiveZip.addFolder(File(inputTestLab))
@@ -74,4 +61,3 @@ internal class ApplicationE2E {
         const val inputTestLab = "xFiles\\input_lab_files\\project_test"
     }
 }
-
