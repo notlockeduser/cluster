@@ -4,9 +4,10 @@ import com.holovin.cluster.data.service.DataService
 import com.holovin.cluster.plagiarist.service.PlagiarismService
 import com.holovin.cluster.user.service.domain.LabData
 import com.holovin.cluster.user.service.domain.LabFolder
-import com.holovin.cluster.user.service.domain.UserData
-import com.holovin.cluster.user.service.domain.UserRole
-import com.holovin.cluster.user.service.mongo.MongoDb
+import com.holovin.cluster.user.service.domain.StudentData
+import com.holovin.cluster.user.service.domain.TeacherData
+import com.holovin.cluster.user.service.mongo.StudentDataRepository
+import com.holovin.cluster.user.service.mongo.TeacherDataRepository
 import net.lingala.zip4j.ZipFile
 import org.springframework.stereotype.Component
 
@@ -14,29 +15,28 @@ import org.springframework.stereotype.Component
 class UserService(
     val plagiarismService: PlagiarismService,
     val dataService: DataService,
-    val mongoDb: MongoDb
+    val studentDataRepository: StudentDataRepository,
+    val teacherDataRepository: TeacherDataRepository
 ) {
 
-    // Common
-    fun addUser(mongoUser: UserData) {
-        mongoDb.addUser(mongoUser)
+    ////////////////////////////// Student
+
+    fun addStudent(studentData: StudentData) {
+        studentDataRepository.save(studentData)
     }
 
-    fun updateUser(mongoUser: UserData) {
-        // update
-        mongoDb.getUserById(mongoUser.id)
+    fun updateStudent(studentData: StudentData) {
+        studentDataRepository.save(studentData)
     }
 
-    // Student
     fun addLab(studentId: String, labData: LabData, archiveLab: ZipFile) {
 
-        val userData = mongoDb.getUserById(studentId)
-        require(userData.role == UserRole.STUDENT) { "this command for STUDENT, id = $studentId" }
+        val studentData = getStudentFromDb(studentId)
 
         // Check if student has access to folder
         val labFolder = labData.createLabFolder()
-        require(userData.acceptedFolders.any { it == labFolder }) {
-            "you does not have access to folder, accepted folder = ${userData.acceptedFolders} " +
+        require(studentData.acceptedFolders.any { it == labFolder }) {
+            "you does not have access to folder, accepted folder = ${studentData.acceptedFolders} " +
                     "require folder = $labFolder"
         }
 
@@ -46,8 +46,7 @@ class UserService(
 
     fun checkLab(studentId: String, labData: LabData): String {
 
-        val userData = mongoDb.getUserById(studentId)
-        require(userData.role == UserRole.STUDENT) { "this command for STUDENT, id = $studentId" }
+        getStudentFromDb(studentId)
 
         // plagiarism service
         val resultOfCheck = plagiarismService.checkLab(labData.createNameLab())
@@ -57,35 +56,41 @@ class UserService(
     }
 
     fun getListOfAccessFolders(studentId: String): List<LabFolder> {
-        return mongoDb.getUserById(studentId).acceptedFolders.toList()
+        return getStudentFromDb(studentId).acceptedFolders.toList()
     }
 
     // Teacher
-    fun updateStudentAccessByEmail(teacherId: String, emailStudent: String, labFolder: LabFolder) {
+    fun addTeacher(teacherData: TeacherData) {
+        teacherDataRepository.save(teacherData)
+    }
 
-        val userData = mongoDb.getUserById(teacherId)
-        require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
+    fun updateTeacher(teacherData: TeacherData) {
+        teacherDataRepository.save(teacherData)
+    }
 
-        // check if student is exists
-        require(mongoDb.existsUserByEmail(emailStudent)) { "Student with this email is not exists, emailStudent = $emailStudent" }
+    fun updateStudentAccessByEmail(teacherId: String, studentEmail: String, labFolder: LabFolder) {
+
+        val teacherData = getTeacherFromDb(teacherId)
+        val studentData = getStudentFromDbByEmail(studentEmail)
 
         // add access (update field acceptedFolders)
-        mongoDb.getUserByEmail(emailStudent).acceptedFolders.add(labFolder)
+        studentData.acceptedFolders.add(labFolder)
+        studentDataRepository.save(studentData)
     }
 
     fun updateStudentsAccessByGroup(teacherId: String, labFolder: LabFolder) {
 
-        val userData = mongoDb.getUserById(teacherId)
-        require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
+        val teacherData = getTeacherFromDb(teacherId)
 
         // add access (update field acceptedFolders)
-        mongoDb.getUsersByGroup(labFolder.group).map { it.acceptedFolders.add(labFolder) }
+        val studentInGroup = studentDataRepository.findAllByGroup(labFolder.group)
+        studentInGroup.map { it.acceptedFolders.add(labFolder) }
+        studentDataRepository.saveAll(studentInGroup)
     }
 
     fun getResultOfLabFolder(teacherId: String, labFolder: LabFolder): String {
 
-        val userData = mongoDb.getUserById(teacherId)
-        require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
+        val teacherData = getTeacherFromDb(teacherId)
 
         // plagiarism service
         val resultOfCheck = plagiarismService.checkFiles(labFolder.createNameFolder())
@@ -96,10 +101,28 @@ class UserService(
 
     fun addLabsByTeacher(teacherId: String, labFolder: LabFolder, archiveLab: ZipFile) {
 
-        val userData = mongoDb.getUserById(teacherId)
-        require(userData.role == UserRole.TEACHER) { "this command for TEACHER, userData = $userData" }
+        val teacherData = getTeacherFromDb(teacherId)
 
         // data service
         dataService.saveLabs(archiveLab, labFolder.createNameFolder())
+    }
+
+    // utils
+    private fun getStudentFromDb(studentId: String): StudentData {
+        val studentDataOptional = studentDataRepository.findById(studentId)
+        require(studentDataOptional.isPresent) { "No such STUDENT with id = $studentId" }
+        return studentDataOptional.get()
+    }
+
+    private fun getStudentFromDbByEmail(studentEmail: String): StudentData {
+        val studentDataOptional = studentDataRepository.findByEmail(studentEmail)
+        require(studentDataOptional.isPresent) { "No such STUDENT with email = $studentEmail" }
+        return studentDataOptional.get()
+    }
+
+    private fun getTeacherFromDb(teacherId: String): TeacherData {
+        val teacherDataOptional = teacherDataRepository.findById(teacherId)
+        require(teacherDataOptional.isPresent) { "No such TEACHER with id = $teacherId" }
+        return teacherDataOptional.get()
     }
 }

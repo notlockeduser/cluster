@@ -39,4 +39,6 @@ out/
 
 ### Cluster files ###
 /xFiles
+/env
+!env/docker-compose.yaml
 

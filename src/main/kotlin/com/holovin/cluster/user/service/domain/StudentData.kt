@@ -1,19 +1,18 @@
 package com.holovin.cluster.user.service.domain
 
-class UserData(
-    val id: String,
+import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.Document
+
+@Document(collection = "student_data")
+data class StudentData(
+    @Id val id: String,
     val name: String,
     val surname: String,
     val group: String,
     val password: String,
-    val role: UserRole,
     val email: String,
     val acceptedFolders: MutableSet<LabFolder> = mutableSetOf()
 ) {
-
-    fun copy(newRole: UserRole): UserData {
-        return UserData(id, name, surname, group, password, newRole, email, acceptedFolders)
-    }
 
     companion object
 }

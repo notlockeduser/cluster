@@ -3,8 +3,10 @@ package com.holovin.cluster.full.use.cases
 import com.holovin.cluster.user.service.UserService
 import com.holovin.cluster.user.service.domain.LabData
 import com.holovin.cluster.user.service.domain.LabFolder
-import com.holovin.cluster.user.service.domain.UserData
-import com.holovin.cluster.user.service.domain.UserRole
+import com.holovin.cluster.user.service.domain.StudentData
+import com.holovin.cluster.user.service.domain.TeacherData
+import com.holovin.cluster.user.service.mongo.StudentDataRepository
+import com.holovin.cluster.user.service.mongo.TeacherDataRepository
 import net.lingala.zip4j.ZipFile
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.assertj.core.api.Assertions.assertThat
@@ -19,18 +21,21 @@ internal class ApplicationE2E {
     @Autowired
     lateinit var userService: UserService
 
+    @Autowired
+    lateinit var studentDataRepository: StudentDataRepository
+
     @Test
     fun `should save lab and give result when student add lab`() {
         // GIVEN
-        val studentData = UserData.random().copy(UserRole.STUDENT)
-        val teacherData = UserData.random().copy(UserRole.TEACHER)
+        val studentData = StudentData.random()
+        val teacherData = TeacherData.random()
         val labFolder = LabFolder(teacherData.id, "lab1", studentData.group)
         val labData = LabData(teacherData.id, "lab1", studentData.group, studentData.surname, studentData.name)
         val zipFile = createZipFile()
 
         // registration
-        userService.addUser(studentData)
-        userService.addUser(teacherData)
+        userService.addStudent(studentData)
+        userService.addTeacher(teacherData)
 
         // add student access to folder
         userService.updateStudentAccessByEmail(teacherData.id, studentData.email, labFolder)
@@ -43,6 +48,19 @@ internal class ApplicationE2E {
 
         println("---Result  ====  $result")
         assertThat(result).isNotNull
+    }
+
+    @Test
+    fun `check Mongo`() {
+        // GIVEN
+        val studentData = StudentData.random()
+
+        // WHEN
+        studentDataRepository.save(studentData)
+        val actual = studentDataRepository.findById(studentData.id).get()
+
+        // THEN
+        assertThat(actual).isEqualTo(studentData)
     }
 
     private fun createZipFile(): ZipFile {
