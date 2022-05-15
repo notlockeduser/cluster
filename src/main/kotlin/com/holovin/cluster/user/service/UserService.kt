@@ -78,12 +78,12 @@ class UserService(
         studentDataRepository.save(studentData)
     }
 
-    fun updateStudentsAccessByGroup(teacherId: String, labFolder: LabFolder) {
+    fun updateStudentsAccessByGroup(teacherId: String, group: String, labFolder: LabFolder) {
 
         val teacherData = getTeacherFromDb(teacherId)
 
         // add access (update field acceptedFolders)
-        val studentInGroup = studentDataRepository.findAllByGroup(labFolder.group)
+        val studentInGroup = studentDataRepository.findAllByGroup(group)
         studentInGroup.map { it.acceptedFolders.add(labFolder) }
         studentDataRepository.saveAll(studentInGroup)
     }

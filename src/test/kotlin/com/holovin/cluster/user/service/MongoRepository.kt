@@ -1,6 +1,6 @@
 package com.holovin.cluster.user.service
 
-import com.holovin.cluster.full.use.cases.random
+import com.holovin.cluster.xrandomizer.random
 import com.holovin.cluster.user.service.domain.StudentData
 import com.holovin.cluster.user.service.mongo.StudentDataRepository
 import org.assertj.core.api.Assertions.assertThat

@@ -1,6 +1,7 @@
 package com.holovin.cluster.data.service
 
 import com.holovin.cluster.user.service.domain.LabData
+import com.holovin.cluster.xrandomizer.random
 import net.lingala.zip4j.ZipFile
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.assertj.core.api.Assertions.assertThat
@@ -14,13 +15,7 @@ internal class DataServiceTest {
     @Test
     fun `extract and save file when DataService_saveLab`() {
         val zipFile = createZipFile()
-        val labData = LabData(
-            randomAlphabetic(5),
-            randomAlphabetic(5),
-            randomAlphabetic(5),
-            randomAlphabetic(5),
-            randomAlphabetic(5)
-        )
+        val labData = LabData.random()
 
         dataService.saveLab(
             zipFile,
@@ -39,13 +34,7 @@ internal class DataServiceTest {
     @Test
     fun `extract and save file when DataService_saveLabs`() {
         val zipFile = createZipFile(true)
-        val labData = LabData(
-            "user1",
-            randomAlphabetic(5),
-            randomAlphabetic(5),
-            randomAlphabetic(5),
-            randomAlphabetic(5)
-        )
+        val labData = LabData.random()
 
         dataService.saveLabs(
             zipFile,

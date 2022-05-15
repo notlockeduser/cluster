@@ -1,9 +1,8 @@
 package com.holovin.cluster.a.system
 
-import com.holovin.cluster.full.use.cases.random
+import com.holovin.cluster.xrandomizer.random
 import com.holovin.cluster.user.service.UserService
 import com.holovin.cluster.user.service.domain.LabData
-import com.holovin.cluster.user.service.domain.LabFolder
 import com.holovin.cluster.user.service.domain.StudentData
 import com.holovin.cluster.user.service.domain.TeacherData
 import com.holovin.cluster.user.service.mongo.StudentDataRepository
@@ -29,8 +28,9 @@ internal class SystemE2E {
         // GIVEN
         val studentData = StudentData.random()
         val teacherData = TeacherData.random()
-        val labFolder = LabFolder(teacherData.id, "lab1", studentData.group)
-        val labData = LabData(teacherData.id, "lab1", studentData.group, studentData.surname, studentData.name)
+        val labData = LabData.random()
+        val labFolder = labData.createLabFolder()
+
         val zipFile = createZipFile()
 
         // registration
