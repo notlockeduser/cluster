@@ -3,6 +3,7 @@ package com.holovin.cluster.a.system
 import com.holovin.cluster.xrandomizer.random
 import com.holovin.cluster.user.service.UserService
 import com.holovin.cluster.user.service.domain.LabData
+import com.holovin.cluster.user.service.domain.LabFolder
 import com.holovin.cluster.user.service.domain.StudentData
 import com.holovin.cluster.user.service.domain.TeacherData
 import com.holovin.cluster.user.service.mongo.StudentDataRepository
@@ -20,44 +21,66 @@ internal class SystemE2E {
     @Autowired
     lateinit var userService: UserService
 
-    @Autowired
-    lateinit var studentDataRepository: StudentDataRepository
-
     @Test
-    fun `should save lab and give result when student add lab`() {
+    fun `should save lab and give result`() {
         // GIVEN
-        val studentData = StudentData.random()
         val teacherData = TeacherData.random()
-        val labData = LabData.random()
-        val labFolder = labData.createLabFolder()
+        val studentData1 = StudentData.random()
+        val studentData2 = StudentData.random()
 
-        val zipFile = createZipFile()
+        val labFolder = LabData.random().createLabFolder()
+
+        val labData1 = createLabData(labFolder, studentData1)
+        val labData2 = createLabData(labFolder, studentData2)
+
+        val zipFile1 = createZipFile(inputTestLab1)
+        val zipFile2 = createZipFile(inputTestLab2)
 
         // registration
-        userService.addStudent(studentData)
         userService.addTeacher(teacherData)
+        userService.addStudent(studentData1)
+        userService.addStudent(studentData2)
 
         // add student access to folder
-        userService.updateStudentAccessByEmail(teacherData.id, studentData.email, labFolder)
+        userService.updateStudentAccessByEmail(teacherData.id, studentData1.email, labFolder)
+        userService.updateStudentAccessByEmail(teacherData.id, studentData2.email, labFolder)
 
         // student add lab
-        userService.addLab(studentData.id, labData, zipFile)
+        userService.addLab(studentData1.id, labData1, zipFile1)
+        userService.addLab(studentData2.id, labData2, zipFile2)
 
         // student check lab
-        val result = userService.checkLab(studentData.id, labData)
+        val resultStudent = userService.checkLabByStudent(studentData1.id, labData1)
+        println("--- Result by student  ====  $resultStudent")
+        assertThat(resultStudent).isNotNull
 
-        println("---Result  ====  $result")
-        assertThat(result).isNotNull
+        // teacher check lab
+        val resultTeacher = userService.checkLabByTeacher(teacherData.id, labFolder)
+        println("--- Result by teacher  ====  $resultTeacher")
+        assertThat(resultTeacher).isNotNull
     }
 
-    private fun createZipFile(): ZipFile {
+    private fun createLabData(
+        labFolder: LabFolder,
+        studentData: StudentData
+    ) = LabData(
+        idTeacher = labFolder.idTeacher,
+        subject = labFolder.subject,
+        labNumber = labFolder.labNumber,
+        group = studentData.group,
+        surname = studentData.surname,
+        name = studentData.name
+    )
+
+    private fun createZipFile(fileName: String): ZipFile {
         val archiveZip = ZipFile(zipTemplate + "zip_${randomAlphabetic(10)}.zip")
-        archiveZip.addFolder(File(inputTestLab))
+        archiveZip.addFolder(File(fileName))
         return archiveZip
     }
 
     companion object {
         const val zipTemplate = "xFiles\\input_zip_files\\"
-        const val inputTestLab = "xFiles\\input_lab_files\\project_test"
+        const val inputTestLab1 = "xFiles\\input_lab_files\\project_test"
+        const val inputTestLab2 = "xFiles\\input_lab_files\\project_test2"
     }
 }

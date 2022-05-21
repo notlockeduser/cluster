@@ -52,6 +52,19 @@ internal class DataServiceTest {
         assertThat(actualLabFolderByStudent2.isDirectory).isTrue
     }
 
+    @Test
+    fun testGetDirectories() {
+        val zipFile = createZipFile(true)
+        val labData = LabData.random()
+
+        dataService.saveLabs(
+            zipFile,
+            labData.createNameLabFolder(),
+        )
+        val actualLabFolder = File(DataService.rootFolder + "\\" + labData.createNameLabFolder())
+        val listFiles = actualLabFolder.listFiles()
+        assertThat(listFiles).isNotNull
+    }
 
     private fun createZipFile(manyFiles: Boolean = false): ZipFile {
         val archiveZip = ZipFile(zipTemplate + "zip_${randomAlphabetic(10)}.zip")

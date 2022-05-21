@@ -11,84 +11,58 @@ import java.io.File
 @Component
 class PlagiarismService {
 
-//     fun checkLabWithWeb(labName: String): ResultOfCheck {
-//        val options = JPlagOptions(filesDb, LanguageOption.JAVA)
-////        options.baseCodeSubmissionName = "template"
-//
-//        val jplag = JPlag(options)
-//        val result = jplag.run()
-//
-//        val comparisons = result.comparisons
-//
-//        val outputDir = File("/path/to/output")
-//        val report = Report(outputDir, options)
-//
-//        report.writeResult(result)
-//
-//        return ResultOfCheck("success projectName")
-//    }
+    fun checkLabByStudent(labFolder: String, studentLabName: String): Float {
+        val options = createJPlagOptions(labFolder)
+        val result = JPlag(options).run()
 
-    fun checkLab(labName: String): List<String> {
-        val (options, result) = resultOfRunPlagiaristChecker()
-        printResult(result)
+//        webOutputResult(options, result)
 
-        return searchResultByName(result, labName)
+        return result.comparisons
+            .filter { it.firstSubmission.name == studentLabName || it.secondSubmission.name == studentLabName }
+            .maxOf { it.similarity() }
     }
 
-    fun checkFiles(labFolderName: String): String {
-        // add labFolderName in path!!!
-        val (options, result) = resultOfRunPlagiaristChecker()
-        printResult(result)
+    fun checkLabByTeacher(labFolder: String): List<Pair<String, Float>> {
 
+        val options = createJPlagOptions(labFolder)
+        val result = JPlag(options).run()
+
+        val actualLabFolder = File(filesDb + "\\" + labFolder)
+        val listNameLabs = actualLabFolder.listFiles()!!
+
+        return listNameLabs.map { it.name }
+            .map { studentLabName ->
+                studentLabName to result.comparisons
+                    .filter { it.firstSubmission.name == studentLabName || it.secondSubmission.name == studentLabName }
+                    .maxOf { it.similarity() }
+            }
+    }
+
+    fun getMatches(labFolder: String, studentLabName: String) {
+        val options = createJPlagOptions(labFolder)
+        val result = JPlag(options).run()
+    }
+
+    private fun webOutputResult(options: JPlagOptions, result: JPlagResult?) {
         val outputDir = File(webOutput)
         val report = Report(outputDir, options)
         report.writeResult(result)
-
-        return result.comparisons.toString()
     }
 
-    private fun searchResultByName(result: JPlagResult, labName: String): List<String> {
-        val comparisons = result.comparisons
-        val result = mutableListOf<String>()
-        for (comparison in comparisons) {
-            val submissionNameA = comparison.firstSubmission.name
-            val submissionNameB = comparison.secondSubmission.name
-
-            if (submissionNameA == labName || submissionNameB == labName) {
-                val percent = (comparison.similarity() * 10).toInt() / 10f
-
-                result.add("$submissionNameA - $submissionNameB $percent")
-                println("$submissionNameA - $submissionNameB $percent")
-            }
-        }
-        return result
-    }
-
-    private fun resultOfRunPlagiaristChecker(): Pair<JPlagOptions, JPlagResult> {
-        val options = JPlagOptions(filesDb, LanguageOption.JAVA)
-//        options.comparisonMode = ComparisonMode.NORMAL
-//        options.verbosity = Verbosity.LONG
+    private fun createJPlagOptions(labName: String = ""): JPlagOptions {
+        val options = JPlagOptions(
+            filesDb + "\\" + labName,
+            LanguageOption.JAVA
+        )
         options.minimumTokenMatch = 1
-        //        options.baseCodeSubmissionName = "template"
-
-        val result = JPlag(options).run()
-        return Pair(options, result)
-    }
-
-    private fun printResult(result: JPlagResult) {
-        val comparisons = result.comparisons
-        for (comparison in comparisons) {
-            val submissionNameA = comparison.firstSubmission.name
-            val submissionNameB = comparison.secondSubmission.name
-
-            val percent = (comparison.similarity() * 10).toInt() / 10f
-
-            println("$submissionNameA - $submissionNameB $percent")
-        }
+        return options
     }
 
     companion object {
         const val filesDb = "xFiles\\database_lab_files"
         const val webOutput = "xFiles\\web_output"
+
+        // options.comparisonMode = ComparisonMode.NORMAL
+        // options.baseCodeSubmissionName = "template"
     }
 }

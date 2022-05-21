@@ -44,15 +44,22 @@ class UserService(
         dataService.saveLab(archiveLab, labData.createNameLabFolder(), labData.createNameLab())
     }
 
-    fun checkLab(studentId: String, labData: LabData): String {
+    fun checkLabByStudent(studentId: String, labData: LabData): String {
 
         getStudentFromDb(studentId)
 
         // plagiarism service
-        val resultOfCheck = plagiarismService.checkLab(labData.createNameLab())
-        println(resultOfCheck)
+        val result = plagiarismService.checkLabByStudent(labData.createNameLabFolder(), labData.createNameLab())
+        return result.toString()
+    }
 
-        return resultOfCheck.toString()
+    fun checkLabByTeacher(teacherId: String, labFolder: LabFolder): String {
+
+        getTeacherFromDb(teacherId)
+
+        // plagiarism service
+        val result = plagiarismService.checkLabByTeacher(labFolder.createNameFolder())
+        return result.toString()
     }
 
     fun getListOfAccessFolders(studentId: String): List<LabFolder> {
@@ -86,17 +93,6 @@ class UserService(
         val studentInGroup = studentDataRepository.findAllByGroup(group)
         studentInGroup.map { it.acceptedFolders.add(labFolder) }
         studentDataRepository.saveAll(studentInGroup)
-    }
-
-    fun getResultOfLabFolder(teacherId: String, labFolder: LabFolder): String {
-
-        val teacherData = getTeacherFromDb(teacherId)
-
-        // plagiarism service
-        val resultOfCheck = plagiarismService.checkFiles(labFolder.createNameFolder())
-        println(resultOfCheck)
-
-        return resultOfCheck
     }
 
     fun addLabsByTeacher(teacherId: String, labFolder: LabFolder, archiveLab: ZipFile) {
