@@ -63,7 +63,7 @@ internal class DataServiceTest {
         )
         val actualLabFolder = File(DataService.rootFolder + "\\" + labData.createNameLabFolder())
         val listFiles = actualLabFolder.listFiles()
-        assertThat(listFiles).isNotNull
+        assertThat(listFiles).isNull()
     }
 
     private fun createZipFile(manyFiles: Boolean = false): ZipFile {
