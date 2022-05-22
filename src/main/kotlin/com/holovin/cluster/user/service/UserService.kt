@@ -2,6 +2,7 @@ package com.holovin.cluster.user.service
 
 import com.holovin.cluster.data.service.DataService
 import com.holovin.cluster.plagiarism.service.PlagiarismService
+import com.holovin.cluster.test.service.TestService
 import com.holovin.cluster.user.service.domain.LabData
 import com.holovin.cluster.user.service.domain.LabFolder
 import com.holovin.cluster.user.service.domain.StudentData
@@ -9,12 +10,14 @@ import com.holovin.cluster.user.service.domain.TeacherData
 import com.holovin.cluster.user.service.mongo.StudentDataRepository
 import com.holovin.cluster.user.service.mongo.TeacherDataRepository
 import net.lingala.zip4j.ZipFile
+import org.junit.platform.launcher.listeners.TestExecutionSummary
 import org.springframework.stereotype.Component
 
 @Component
 class UserService(
     val plagiarismService: PlagiarismService,
     val dataService: DataService,
+    val testService: TestService,
     val studentDataRepository: StudentDataRepository,
     val teacherDataRepository: TeacherDataRepository
 ) {
@@ -44,7 +47,7 @@ class UserService(
         dataService.saveLab(archiveLab, labData.createNameLabFolder(), labData.createNameLab())
     }
 
-    fun checkLabByStudent(studentId: String, labData: LabData): String {
+    fun checkPlagLabByStudent(studentId: String, labData: LabData): String {
 
         getStudentFromDb(studentId)
 
@@ -53,13 +56,13 @@ class UserService(
         return result.toString()
     }
 
-    fun checkLabByTeacher(teacherId: String, labFolder: LabFolder): String {
+    fun checkTestsLabByStudent(studentId: String, labData: LabData): TestExecutionSummary {
 
-        getTeacherFromDb(teacherId)
+        getStudentFromDb(studentId)
 
-        // plagiarism service
-        val result = plagiarismService.checkLabByTeacher(labFolder.createNameFolder())
-        return result.toString()
+        // test service
+        val result = testService.checkLab(labData.createNameLabFolder(), labData.createNameLab())
+        return result
     }
 
     fun getListOfAccessFolders(studentId: String): List<LabFolder> {
@@ -73,6 +76,15 @@ class UserService(
 
     fun updateTeacher(teacherData: TeacherData) {
         teacherDataRepository.save(teacherData)
+    }
+
+    fun checkPlagLabByTeacher(teacherId: String, labFolder: LabFolder): String {
+
+        getTeacherFromDb(teacherId)
+
+        // plagiarism service
+        val result = plagiarismService.checkLabByTeacher(labFolder.createNameFolder())
+        return result.toString()
     }
 
     fun updateStudentAccessByEmail(teacherId: String, studentEmail: String, labFolder: LabFolder) {

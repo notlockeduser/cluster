@@ -6,7 +6,6 @@ import com.holovin.cluster.user.service.domain.LabData
 import com.holovin.cluster.user.service.domain.LabFolder
 import com.holovin.cluster.user.service.domain.StudentData
 import com.holovin.cluster.user.service.domain.TeacherData
-import com.holovin.cluster.user.service.mongo.StudentDataRepository
 import net.lingala.zip4j.ZipFile
 import org.apache.commons.lang3.RandomStringUtils.randomAlphabetic
 import org.assertj.core.api.Assertions.assertThat
@@ -49,15 +48,25 @@ internal class SystemE2E {
         userService.addLab(studentData1.id, labData1, zipFile1)
         userService.addLab(studentData2.id, labData2, zipFile2)
 
-        // student check lab
-        val resultStudent = userService.checkLabByStudent(studentData1.id, labData1)
+        // student check plag lab
+        val resultStudent = userService.checkPlagLabByStudent(studentData1.id, labData1)
         println("--- Result by student  ====  $resultStudent")
         assertThat(resultStudent).isNotNull
 
         // teacher check lab
-        val resultTeacher = userService.checkLabByTeacher(teacherData.id, labFolder)
+        val resultTeacher = userService.checkPlagLabByTeacher(teacherData.id, labFolder)
         println("--- Result by teacher  ====  $resultTeacher")
         assertThat(resultTeacher).isNotNull
+
+//        // student check test lab
+//        val resultTestsStudent = userService.checkTestsLabByStudent(studentData2.id, labData2)
+//        println("--- Result tests by student  ====  $resultTestsStudent")
+//        assertThat(resultTestsStudent).isNotNull
+//
+//        assertThat(resultTestsStudent.testsFoundCount).isEqualTo(3)
+//        assertThat(resultTestsStudent.testsFailedCount).isEqualTo(1)
+//        assertThat(resultTestsStudent.testsSucceededCount).isEqualTo(2)
+//        println(resultTestsStudent.failures.map { println(it) })
     }
 
     private fun createLabData(

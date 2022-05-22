@@ -1,4 +1,4 @@
-package com.holovin.cluster.user.service
+package com.holovin.cluster.mongo
 
 import com.holovin.cluster.xrandomizer.random
 import com.holovin.cluster.user.service.domain.StudentData
