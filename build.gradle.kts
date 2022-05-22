@@ -35,6 +35,8 @@ dependencies {
     implementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
     implementation("org.junit.platform:junit-platform-launcher:1.8.2")
     implementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+    implementation("org.apache.maven.surefire:surefire-report-parser:3.0.0-M6")
+
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

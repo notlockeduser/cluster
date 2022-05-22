@@ -56,13 +56,29 @@ class UserService(
         return result.toString()
     }
 
-    fun checkTestsLabByStudent(studentId: String, labData: LabData): TestExecutionSummary {
+    fun checkCompileLabByStudent(studentId: String, labData: LabData): Result<String> {
 
         getStudentFromDb(studentId)
 
-        // test service
-        val result = testService.checkLab(labData.createNameLabFolder(), labData.createNameLab())
-        return result
+        return try {
+            testService.compileSrc(labData.createNameLabFolder(), labData.createNameLab())
+            Result.success("ok")
+        } catch (ex: Exception) {
+            Result.failure(ex)
+        }
+    }
+
+
+    fun checkTestsLabByStudent(studentId: String, labData: LabData): Result<String> {
+
+        getStudentFromDb(studentId)
+
+        return try {
+            testService.runTests(labData.createNameLabFolder(), labData.createNameLab())
+            Result.success("ok")
+        } catch (ex: Exception) {
+            Result.failure(ex)
+        }
     }
 
     fun getListOfAccessFolders(studentId: String): List<LabFolder> {

@@ -58,15 +58,11 @@ internal class SystemE2E {
         println("--- Result by teacher  ====  $resultTeacher")
         assertThat(resultTeacher).isNotNull
 
-//        // student check test lab
-//        val resultTestsStudent = userService.checkTestsLabByStudent(studentData2.id, labData2)
-//        println("--- Result tests by student  ====  $resultTestsStudent")
-//        assertThat(resultTestsStudent).isNotNull
-//
-//        assertThat(resultTestsStudent.testsFoundCount).isEqualTo(3)
-//        assertThat(resultTestsStudent.testsFailedCount).isEqualTo(1)
-//        assertThat(resultTestsStudent.testsSucceededCount).isEqualTo(2)
-//        println(resultTestsStudent.failures.map { println(it) })
+        // student check test lab
+        val checkCompileLabByStudent = userService.checkCompileLabByStudent(studentData2.id, labData2)
+        val checkTestsLabByStudent = userService.checkTestsLabByStudent(studentData2.id, labData2)
+        assertThat(checkCompileLabByStudent).isEqualTo(Result.success("ok"))
+        assertThat(checkTestsLabByStudent).isEqualTo(Result.success("ok"))
     }
 
     private fun createLabData(
