@@ -21,7 +21,7 @@ class TestService {
         val cmd = "cmd /c start cmd.exe /K \"$source & $commandCompilationSrc & EXIT\""
 
         Runtime.getRuntime().exec(cmd).waitFor()
-        Thread.sleep(5000)
+        Thread.sleep(10000)
 
         checkIfCompileSuccess(labPath)
     }
@@ -33,7 +33,7 @@ class TestService {
         val commandCompilationTest = "mvn test"
         val cmd = "cmd /c start cmd.exe /K \"$source & $commandCompilationTest & EXIT\""
         Runtime.getRuntime().exec(cmd).waitFor()
-        Thread.sleep(10000)
+        Thread.sleep(15000)
 
         val surefireReportsDirectory = File("$labPath\\target\\surefire-reports")
 

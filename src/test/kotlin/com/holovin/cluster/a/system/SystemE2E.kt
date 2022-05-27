@@ -65,6 +65,32 @@ internal class SystemE2E {
         assertThat(checkTestsLabByStudent).isEqualTo(Result.success("ok"))
     }
 
+    @Test
+    fun `should get template lab`() {
+        // GIVEN
+        val teacherData = TeacherData.random()
+        val studentData = StudentData.random()
+
+        val labFolder = LabData.random().createLabFolder()
+        val labData = createLabData(labFolder, studentData)
+        val zipFileTemplate = createZipFile(inputTestLab1)
+
+        // registration
+        userService.addTeacher(teacherData)
+        userService.addStudent(studentData)
+
+        // add student access to folder
+        userService.updateStudentAccessByEmail(teacherData.id, studentData.email, labFolder)
+
+        // teacher add template lab
+        userService.addTemplateByTeacher(teacherData.id, labData.createLabFolder(), zipFileTemplate)
+
+        // student download template lab
+        val downloadTemplateLab = userService.downloadTemplateLab(studentData.id, labData)
+
+        assertThat(downloadTemplateLab).isNotNull
+    }
+
     private fun createLabData(
         labFolder: LabFolder,
         studentData: StudentData

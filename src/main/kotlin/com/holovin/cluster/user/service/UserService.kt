@@ -10,7 +10,6 @@ import com.holovin.cluster.user.service.domain.TeacherData
 import com.holovin.cluster.user.service.mongo.StudentDataRepository
 import com.holovin.cluster.user.service.mongo.TeacherDataRepository
 import net.lingala.zip4j.ZipFile
-import org.junit.platform.launcher.listeners.TestExecutionSummary
 import org.springframework.stereotype.Component
 
 @Component
@@ -47,6 +46,21 @@ class UserService(
         dataService.saveLab(archiveLab, labData.createNameLabFolder(), labData.createNameLab())
     }
 
+    fun downloadTemplateLab(studentId: String, labData: LabData): ZipFile {
+
+        val studentData = getStudentFromDb(studentId)
+
+        // Check if student has access to folder
+        val labFolder = labData.createLabFolder()
+        require(studentData.acceptedFolders.any { it == labFolder }) {
+            "you does not have access to folder, accepted folder = ${studentData.acceptedFolders} " +
+                    "require folder = $labFolder"
+        }
+
+        // data service
+        return dataService.getTemplate(labData.createNameLabFolder())
+    }
+
     fun checkPlagLabByStudent(studentId: String, labData: LabData): String {
 
         getStudentFromDb(studentId)
@@ -67,7 +81,6 @@ class UserService(
             Result.failure(ex)
         }
     }
-
 
     fun checkTestsLabByStudent(studentId: String, labData: LabData): Result<String> {
 
@@ -127,8 +140,13 @@ class UserService(
 
         val teacherData = getTeacherFromDb(teacherId)
 
-        // data service
         dataService.saveLabs(archiveLab, labFolder.createNameFolder())
+    }
+
+    fun addTemplateByTeacher(teacherId: String, labFolder: LabFolder, archiveLab: ZipFile) {
+        val teacherData = getTeacherFromDb(teacherId)
+
+        dataService.saveLab(archiveLab, labFolder.createNameFolder(), "template")
     }
 
     // utils

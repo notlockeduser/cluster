@@ -38,11 +38,6 @@ class PlagiarismService {
             }
     }
 
-    fun getMatches(labFolder: String, studentLabName: String) {
-        val options = createJPlagOptions(labFolder)
-        val result = JPlag(options).run()
-    }
-
     private fun webOutputResult(options: JPlagOptions, result: JPlagResult?) {
         val outputDir = File(webOutput)
         val report = Report(outputDir, options)
