@@ -49,6 +49,7 @@ class PlagiarismService {
             filesDb + "\\" + labName,
             LanguageOption.JAVA
         )
+        options.exclusionFileName = "template"
         options.minimumTokenMatch = 1
         return options
     }

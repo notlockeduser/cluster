@@ -36,7 +36,10 @@ dependencies {
     implementation("org.junit.platform:junit-platform-launcher:1.8.2")
     implementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
     implementation("org.apache.maven.surefire:surefire-report-parser:3.0.0-M6")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0")
 
+    implementation("org.springframework.boot:spring-boot-starter-security")
+//    implementation("org.springframework.security:spring-security-test")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

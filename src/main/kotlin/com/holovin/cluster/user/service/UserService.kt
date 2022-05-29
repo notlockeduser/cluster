@@ -11,6 +11,7 @@ import com.holovin.cluster.user.service.mongo.StudentDataRepository
 import com.holovin.cluster.user.service.mongo.TeacherDataRepository
 import net.lingala.zip4j.ZipFile
 import org.springframework.stereotype.Component
+import org.springframework.web.multipart.MultipartFile
 
 @Component
 class UserService(
@@ -23,15 +24,15 @@ class UserService(
 
     ////////////////////////////// Student
 
-    fun addStudent(studentData: StudentData) {
-        studentDataRepository.save(studentData)
+    fun addStudent(studentData: StudentData): StudentData {
+        return studentDataRepository.save(studentData)
     }
 
-    fun updateStudent(studentData: StudentData) {
-        studentDataRepository.save(studentData)
+    fun updateStudent(studentData: StudentData): StudentData {
+        return studentDataRepository.save(studentData)
     }
 
-    fun addLab(studentId: String, labData: LabData, archiveLab: ZipFile) {
+    fun addLab(studentId: String, labData: LabData, archiveLab: MultipartFile) {
 
         val studentData = getStudentFromDb(studentId)
 
@@ -99,8 +100,8 @@ class UserService(
     }
 
     // Teacher
-    fun addTeacher(teacherData: TeacherData) {
-        teacherDataRepository.save(teacherData)
+    fun addTeacher(teacherData: TeacherData): TeacherData {
+        return teacherDataRepository.save(teacherData)
     }
 
     fun updateTeacher(teacherData: TeacherData) {
@@ -114,6 +115,13 @@ class UserService(
         // plagiarism service
         val result = plagiarismService.checkLabByTeacher(labFolder.createNameFolder())
         return result.toString()
+    }
+
+    fun createLab(teacherEmail: String, labFolder: LabFolder, description: String?): TeacherData {
+        val teacherFromDb = getTeacherFromDbByEmail(teacherEmail)
+        teacherFromDb.createdLabs.add(labFolder)
+        teacherDataRepository.save(teacherFromDb)
+        return teacherFromDb
     }
 
     fun updateStudentAccessByEmail(teacherId: String, studentEmail: String, labFolder: LabFolder) {
@@ -142,12 +150,12 @@ class UserService(
 
         dataService.saveLabs(archiveLab, labFolder.createNameFolder())
     }
-
-    fun addTemplateByTeacher(teacherId: String, labFolder: LabFolder, archiveLab: ZipFile) {
-        val teacherData = getTeacherFromDb(teacherId)
-
-        dataService.saveLab(archiveLab, labFolder.createNameFolder(), "template")
-    }
+//
+//    fun addTemplateByTeacher(teacherId: String, labFolder: LabFolder, archiveLab: ZipFile) {
+//        val teacherData = getTeacherFromDb(teacherId)
+//
+//        dataService.saveLab(archiveLab, labFolder.createNameFolder(), "template")
+//    }
 
     // utils
     private fun getStudentFromDb(studentId: String): StudentData {
@@ -156,15 +164,29 @@ class UserService(
         return studentDataOptional.get()
     }
 
-    private fun getStudentFromDbByEmail(studentEmail: String): StudentData {
+    private fun getTeacherFromDb(teacherId: String): TeacherData {
+        val teacherDataOptional = teacherDataRepository.findById(teacherId)
+        require(teacherDataOptional.isPresent) { "No such TEACHER with id = $teacherId" }
+        return teacherDataOptional.get()
+    }
+
+    fun existsStudentFromDbByEmail(studentEmail: String): Boolean {
+        return studentDataRepository.findByEmail(studentEmail).isPresent
+    }
+
+    fun existsTeacherFromDbByEmail(teacherEmail: String): Boolean {
+        return teacherDataRepository.findByEmail(teacherEmail).isPresent
+    }
+
+    fun getStudentFromDbByEmail(studentEmail: String): StudentData {
         val studentDataOptional = studentDataRepository.findByEmail(studentEmail)
         require(studentDataOptional.isPresent) { "No such STUDENT with email = $studentEmail" }
         return studentDataOptional.get()
     }
 
-    private fun getTeacherFromDb(teacherId: String): TeacherData {
-        val teacherDataOptional = teacherDataRepository.findById(teacherId)
-        require(teacherDataOptional.isPresent) { "No such TEACHER with id = $teacherId" }
+    fun getTeacherFromDbByEmail(teacherEmail: String): TeacherData {
+        val teacherDataOptional = teacherDataRepository.findByEmail(teacherEmail)
+        require(teacherDataOptional.isPresent) { "No such TEACHER with email = $teacherEmail" }
         return teacherDataOptional.get()
     }
 }

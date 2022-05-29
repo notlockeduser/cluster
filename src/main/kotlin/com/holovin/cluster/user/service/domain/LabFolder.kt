@@ -1,9 +1,9 @@
 package com.holovin.cluster.user.service.domain
 
 data class LabFolder(
-    val idTeacher: String,
-    val subject: String,
-    val labNumber: String
+    val idTeacher: String? = null,
+    val subject: String? = null,
+    val labNumber: String? = null
 ) {
 
     fun createNameFolder(): String {
