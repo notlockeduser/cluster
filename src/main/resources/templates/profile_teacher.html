@@ -22,16 +22,16 @@
         <p th:text="*{name}"></p>
         <p th:text="*{surname}"></p>
         <p th:text="*{email}"></p>
-        <tr th:each="labFolder: *{createdLabs}">
-            <a th:text="${labFolder.createNameFolder()}"
-               th:href="@{/get_lab_by_teacher/{email}/{subject}/{labNumber}(email = ${labFolder.getIdTeacher()},subject = ${labFolder.getSubject()},labNumber = ${labFolder.getLabNumber()})}">
-            </a>
-        </tr>
-
-        <hr>
-        <a th:href="@{create_lab}">Add lab</a>
 
     </div>
+    <hr>
+    <tr th:each="lab: *{labs}">
+        <a th:text="${lab}"
+           th:href="@{/get_lab_by_teacher/{email}/{subject}/{labNumber}(email = ${lab.getTeacherEmail()},subject = ${lab.getSubject()},labNumber = ${lab.getLabNumber()})}">
+        </a>
+    </tr>
+    <hr>
+    <a th:href="@{/create_lab_by_teacher}">Add lab</a>
 </div>
 </body>
 </html>

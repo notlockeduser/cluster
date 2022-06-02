@@ -1,1 +1,1 @@
-rootProject.name = "cluster"
+rootProject.name = "gateway"

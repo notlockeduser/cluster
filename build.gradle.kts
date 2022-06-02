@@ -16,30 +16,24 @@ repositories {
 }
 
 dependencies {
+
     // main
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.3")
+    implementation("org.springframework.cloud:spring-cloud-starter-loadbalancer:3.1.3")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.mongodb:bson:4.6.0")
+
     // optional
-    implementation("de.jplag:jplag:3.0.0")
     implementation("org.apache.commons:commons-lang3:3.12.0")
     implementation("net.lingala.zip4j:zip4j:2.10.0")
-
     implementation("org.jeasy:easy-random:5.0.0")
     implementation("org.jeasy:easy-random-core:5.0.0")
-
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb:2.6.7")
-    implementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
-    implementation("org.junit.platform:junit-platform-launcher:1.8.2")
-    implementation("org.junit.jupiter:junit-jupiter-engine:5.8.2")
-    implementation("org.apache.maven.surefire:surefire-report-parser:3.0.0-M6")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0")
-
-    implementation("org.springframework.boot:spring-boot-starter-security")
-//    implementation("org.springframework.security:spring-security-test")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
